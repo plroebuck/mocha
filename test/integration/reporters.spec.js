@@ -1,6 +1,5 @@
 'use strict';
 
-var assert = require('assert');
 var os = require('os');
 var fs = require('fs');
 var crypto = require('crypto');
@@ -19,7 +18,7 @@ describe('reporters', function () {
     });
 
     it('does not exceed maximum callstack (issue: 1875)', function () {
-      assert(res.output.indexOf('RangeError') === -1, 'Threw RangeError');
+      expect(res.output, 'not to contain', 'RangeError');
     });
 
     it('contains spec src', function () {
@@ -29,7 +28,7 @@ describe('reporters', function () {
         '```'
       ].join('\n');
 
-      assert(res.output.indexOf(src) !== -1, 'No assert found');
+      expect(res.output, 'to contain', src);
     });
   });
 
@@ -53,7 +52,7 @@ describe('reporters', function () {
         fs.unlinkSync(tmpFile);
 
         expectedOutput.forEach(function (line) {
-          assert(xml.indexOf(line) !== -1, 'XML did not contain ' + line);
+          expect(xml, 'to contain', line);
         });
 
         done(err);
@@ -72,7 +71,7 @@ describe('reporters', function () {
           done(err);
           return;
         }
-        assert.equal(result.code, 0);
+        expect(result, 'to have passed');
         done();
       });
     });
@@ -88,7 +87,7 @@ describe('reporters', function () {
           done(err);
           return;
         }
-        assert.equal(result.code, 0);
+        expect(result, 'to have passed');
         done();
       });
     });
