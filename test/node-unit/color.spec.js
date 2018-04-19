@@ -1,6 +1,5 @@
 'use strict';
 
-var assert = require('assert');
 var childProcess = require('child_process');
 var path = require('path');
 
@@ -12,7 +11,7 @@ describe('Mocha', function () {
     childProcess.execFile(process.execPath, command, function (err, stdout, stderr) {
       if (err) return cb(err);
 
-      assert(stdout.indexOf('[90m') === -1);
+      expect(stdout, 'not to contain', '[90m');
 
       cb(null);
     });
