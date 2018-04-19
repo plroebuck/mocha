@@ -470,7 +470,6 @@
     "supports-color": "4.4.0"
   },
   "devDependencies": {
-    "assert": "^1.4.1",
     "assetgraph-builder": "^5.6.4",
     "browserify": "^14.4.0",
     "coffee-script": "^1.10.0",
@@ -498,7 +497,7 @@
     "rimraf": "^2.5.2",
     "svgo": "^0.7.2",
     "through2": "^2.0.1",
-    "unexpected": "^10.37.4",
+    "unexpected": "^10.37.5",
     "watchify": "^3.7.0"
   },
   "files": [
