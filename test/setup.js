@@ -1,6 +1,6 @@
 'use strict';
 
-const unexpected = require('unexpected');
+var unexpected = require('unexpected');
 global.expect = require('./assertions').mixinMochaAssertions(
   unexpected.clone()
 );
