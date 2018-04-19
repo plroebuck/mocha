@@ -18,7 +18,7 @@ module.exports = config => {
   const cfg = {
     frameworks: [
       'browserify',
-      'expect',
+      'unexpected',
       'mocha'
     ],
     files: [
