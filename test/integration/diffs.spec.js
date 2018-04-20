@@ -1,6 +1,5 @@
 'use strict';
 
-var inspect = require('util').inspect;
 var helpers = require('./helpers');
 var run = helpers.runMocha;
 var fs = require('fs');
