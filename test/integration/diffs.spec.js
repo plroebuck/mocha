@@ -72,9 +72,7 @@ describe('diffs', function () {
         return;
       }
       expected = getExpectedOutput();
-      console.log('EXPECTED', inspect(expected));
       diffs = getDiffs(res.output.replace(/\r\n/g, '\n'));
-      console.log('DIFFS', inspect(diffs));
       done();
     });
   });
