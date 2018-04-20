@@ -8,7 +8,7 @@ it('should build a non-broken bundle for AMD', function (done) {
   fs.readFile(bundle, 'utf8', function (err, content) {
     if (err) { return done(err); }
 
-    expect(content).not.to.match(/define.amd/);
+    expect(content, 'not to match', /define.amd/);
     done();
   });
 });
