@@ -25,9 +25,14 @@ describe('Json Stream reporter', function () {
   beforeEach(function () {
     stdout = [];
     stdoutWrite = process.stdout.write;
-    process.stdout.write = function (string) {
+    process.stdout.write = function (string, enc, callback) {
       stdout.push(string);
+      stdoutWrite.call(process.stdout, string, enc, callback);
     };
+  });
+
+  afterEach(function () {
+    process.stdout.write = stdoutWrite;
   });
 
   describe('on start', function () {
@@ -39,7 +44,7 @@ describe('Json Stream reporter', function () {
 
       process.stdout.write = stdoutWrite;
 
-      expect(stdout[0]).to.eql('["start",{"total":' + expectedTotal + '}]\n');
+      expect(stdout[0], 'to equal', '["start",{"total":' + expectedTotal + '}]\n');
     });
   });
 
@@ -50,7 +55,7 @@ describe('Json Stream reporter', function () {
 
       process.stdout.write = stdoutWrite;
 
-      expect(stdout[0]).to.eql('["pass",{"title":"' + expectedTitle + '","fullTitle":"' + expectedFullTitle + '","duration":' + expectedDuration + ',"currentRetry":' + currentRetry + '}]\n');
+      expect(stdout[0], 'to equal', '["pass",{"title":"' + expectedTitle + '","fullTitle":"' + expectedFullTitle + '","duration":' + expectedDuration + ',"currentRetry":' + currentRetry + '}]\n');
     });
   });
 
@@ -64,7 +69,7 @@ describe('Json Stream reporter', function () {
 
         process.stdout.write = stdoutWrite;
 
-        expect(stdout[0]).to.eql('["fail",{"title":"' + expectedTitle + '","fullTitle":"' + expectedFullTitle + '","duration":' + expectedDuration + ',"currentRetry":' + currentRetry + ',"err":"' + expectedErrorMessage + '","stack":"' + expectedErrorStack + '"}]\n');
+        expect(stdout[0], 'to equal', '["fail",{"title":"' + expectedTitle + '","fullTitle":"' + expectedFullTitle + '","duration":' + expectedDuration + ',"currentRetry":' + currentRetry + ',"err":"' + expectedErrorMessage + '","stack":"' + expectedErrorStack + '"}]\n');
       });
     });
 
@@ -76,7 +81,7 @@ describe('Json Stream reporter', function () {
         JSONStream.call({}, runner);
         process.stdout.write = stdoutWrite;
 
-        expect(stdout[0]).to.eql('["fail",{"title":"' + expectedTitle + '","fullTitle":"' + expectedFullTitle + '","duration":' + expectedDuration + ',"currentRetry":' + currentRetry + ',"err":"' + expectedErrorMessage + '","stack":null}]\n');
+        expect(stdout[0], 'to equal', '["fail",{"title":"' + expectedTitle + '","fullTitle":"' + expectedFullTitle + '","duration":' + expectedDuration + ',"currentRetry":' + currentRetry + ',"err":"' + expectedErrorMessage + '","stack":null}]\n');
       });
     });
   });
@@ -86,7 +91,7 @@ describe('Json Stream reporter', function () {
       runner = createMockRunner('end', 'end');
       JSONStream.call({}, runner);
       process.stdout.write = stdoutWrite;
-      expect(stdout[0]).to.match(/end/);
+      expect(stdout[0], 'to match', /end/);
     });
   });
 });

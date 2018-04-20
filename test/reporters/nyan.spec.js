@@ -16,9 +16,14 @@ describe('Nyan reporter', function () {
     beforeEach(function () {
       stdout = [];
       stdoutWrite = process.stdout.write;
-      process.stdout.write = function (string) {
+      process.stdout.write = function (string, enc, callback) {
         stdout.push(string);
+        stdoutWrite.call(process.stdout, string, enc, callback);
       };
+    });
+
+    afterEach(function () {
+      process.stdout.write = stdoutWrite;
     });
 
     describe('on start', function () {
@@ -33,7 +38,7 @@ describe('Nyan reporter', function () {
         }, runner);
         process.stdout.write = stdoutWrite;
 
-        expect(calledDraw).to.be(true);
+        expect(calledDraw, 'to be', true);
       });
     });
     describe('on pending', function () {
@@ -48,7 +53,7 @@ describe('Nyan reporter', function () {
         }, runner);
         process.stdout.write = stdoutWrite;
 
-        expect(calledDraw).to.be(true);
+        expect(calledDraw, 'to be', true);
       });
     });
     describe('on pass', function () {
@@ -67,7 +72,7 @@ describe('Nyan reporter', function () {
         }, runner);
         process.stdout.write = stdoutWrite;
 
-        expect(calledDraw).to.be(true);
+        expect(calledDraw, 'to be', true);
       });
     });
     describe('on fail', function () {
@@ -85,7 +90,7 @@ describe('Nyan reporter', function () {
         }, runner);
         process.stdout.write = stdoutWrite;
 
-        expect(calledDraw).to.be(true);
+        expect(calledDraw, 'to be', true);
       });
     });
     describe('on end', function () {
@@ -101,7 +106,7 @@ describe('Nyan reporter', function () {
         }, runner);
         process.stdout.write = stdoutWrite;
 
-        expect(calledEpilogue).to.be(true);
+        expect(calledEpilogue, 'to be', true);
       });
       it('should write numberOfLines amount of new lines', function () {
         var expectedNumberOfLines = 4;
@@ -115,7 +120,7 @@ describe('Nyan reporter', function () {
         var arrayOfNewlines = stdout.filter(function (value) { return value === '\n'; });
         process.stdout.write = stdoutWrite;
 
-        expect(arrayOfNewlines).to.have.length(expectedNumberOfLines);
+        expect(arrayOfNewlines, 'to have length', expectedNumberOfLines);
       });
       it('should call Base show', function () {
         var showCalled = false;
@@ -131,7 +136,7 @@ describe('Nyan reporter', function () {
         }, runner);
 
         process.stdout.write = stdoutWrite;
-        expect(showCalled).to.be(true);
+        expect(showCalled, 'to be', true);
         Base.cursor.show = cachedShow;
       });
     });
@@ -144,9 +149,13 @@ describe('Nyan reporter', function () {
     beforeEach(function () {
       stdout = [];
       stdoutWrite = process.stdout.write;
-      process.stdout.write = function (string) {
+      process.stdout.write = function (string, enc, callback) {
         stdout.push(string);
       };
+    });
+
+    afterEach(function () {
+      process.stdout.write = stdoutWrite;
     });
 
     describe('if tick is false', function () {
@@ -182,7 +191,7 @@ describe('Nyan reporter', function () {
           '  ""  "" ',
           '\n'
         ];
-        expect(stdout).to.eql(expectedArray);
+        expect(stdout, 'to equal', expectedArray);
       });
     });
     describe('if tick is true', function () {
@@ -203,7 +212,7 @@ describe('Nyan reporter', function () {
           cursorUp: function () {}
         });
 
-        process.stdout.write = stdoutWrite;
+        // process.stdout.write = stdoutWrite;
         var expectedArray = [
           '\u001b[0C',
           '_,------,',
@@ -218,7 +227,7 @@ describe('Nyan reporter', function () {
           ' ""  "" ',
           '\n'
         ];
-        expect(stdout).to.eql(expectedArray);
+        expect(stdout, 'to equal', expectedArray);
       });
     });
   });
@@ -235,6 +244,10 @@ describe('Nyan reporter', function () {
       };
     });
 
+    afterEach(function () {
+      process.stdout.write = stdoutWrite;
+    });
+
     it('should write cursor down interaction with expected number', function () {
       var nyanCat = new NyanCat({on: function () {}, once: function () {}});
       var expectedNumber = 25;
@@ -244,7 +257,7 @@ describe('Nyan reporter', function () {
       var expectedArray = [
         '\u001b[' + expectedNumber + 'B'
       ];
-      expect(stdout).to.eql(expectedArray);
+      expect(stdout, 'to equal', expectedArray);
     });
   });
 
@@ -255,9 +268,13 @@ describe('Nyan reporter', function () {
     beforeEach(function () {
       stdout = [];
       stdoutWrite = process.stdout.write;
-      process.stdout.write = function (string) {
+      process.stdout.write = function (string, enc, callback) {
         stdout.push(string);
       };
+    });
+
+    afterEach(function () {
+      process.stdout.write = stdoutWrite;
     });
 
     it('should write cursor up interaction with expected number', function () {
@@ -269,7 +286,7 @@ describe('Nyan reporter', function () {
       var expectedArray = [
         '\u001b[' + expectedNumber + 'A'
       ];
-      expect(stdout).to.eql(expectedArray);
+      expect(stdout, 'to equal', expectedArray);
     });
   });
 
@@ -291,7 +308,7 @@ describe('Nyan reporter', function () {
         var expectedString = 'hello';
         var outputString = nyanCat.rainbowify(expectedString);
 
-        expect(outputString).to.equal(expectedString);
+        expect(outputString, 'to be', expectedString);
       });
     });
     describe('useColors is true', function () {
@@ -319,7 +336,7 @@ describe('Nyan reporter', function () {
           },
           expectedString);
 
-        expect(outputString).to.equal(expectedRainbowifyString);
+        expect(outputString, 'to be', expectedRainbowifyString);
       });
     });
   });
@@ -341,7 +358,7 @@ describe('Nyan reporter', function () {
           trajectories: trajectories
         });
 
-        expect(expectedSegment).to.equal('_');
+        expect(expectedSegment, 'to be', '_');
       });
       it('should shift each trajectory item, if its length is greater of equal to its max width', function () {
         var nyanCat = new NyanCat({on: function () {}, once: function () {}});
@@ -359,7 +376,7 @@ describe('Nyan reporter', function () {
           trajectories: trajectories
         });
 
-        expect(trajectories).to.eql(expectedTrajectories);
+        expect(trajectories, 'to equal', expectedTrajectories);
       });
     });
     describe('if tick is false', function () {
@@ -378,23 +395,35 @@ describe('Nyan reporter', function () {
           trajectories: trajectories
         });
 
-        expect(expectedSegment).to.eql('-');
+        expect(expectedSegment, 'to equal', '-');
       });
     });
   });
 
   describe('drawScoreboard', function () {
-    it('should write scoreboard with color set with each stat', function () {
-      var cachedColor = Base.color;
+    var stdoutWrite;
+    var stdout;
+    var cachedColor;
+
+    beforeEach(function () {
+      stdout = [];
+      stdoutWrite = process.stdout.write;
+      process.stdout.write = function (string, enc, callback) {
+        stdout.push(string);
+        stdoutWrite.call(process.stdout, string, enc, callback);
+      };
+      cachedColor = Base.color;
       Base.color = function (type, n) {
         return type + n;
       };
-      var stdout = [];
-      var stdoutWrite = process.stdout.write;
-      process.stdout.write = function (string) {
-        stdout.push(string);
-      };
+    });
 
+    afterEach(function () {
+      process.stdout.write = stdoutWrite;
+      Base.color = cachedColor;
+    });
+
+    it('should write scoreboard with color set with each stat', function () {
       var passes = 2;
       var pending = 1;
       var failures = 1;
@@ -416,16 +445,10 @@ describe('Nyan reporter', function () {
         '\n',
         '\n'
       ];
-      expect(stdout).to.eql(expectedArray);
-      process.stdout.write = stdoutWrite;
-      Base.color = cachedColor;
+      expect(stdout, 'to equal', expectedArray);
     });
+
     it('should call cursorUp with given numberOfLines', function () {
-      var stdout = [];
-      var stdoutWrite = process.stdout.write;
-      process.stdout.write = function (string) {
-        stdout.push(string);
-      };
       var expectedCursorArgument = null;
       var expectedNumberOfLines = 1000;
 
@@ -438,18 +461,28 @@ describe('Nyan reporter', function () {
         numberOfLines: expectedNumberOfLines
       });
 
-      expect(expectedCursorArgument).to.equal(expectedNumberOfLines);
-      process.stdout.write = stdoutWrite;
+      expect(expectedCursorArgument, 'to be', expectedNumberOfLines);
     });
   });
 
   describe('drawRainbow', function () {
-    it('should write width, contents and newline for each trajectory', function () {
-      var stdout = [];
-      var stdoutWrite = process.stdout.write;
-      process.stdout.write = function (string) {
+    var stdoutWrite;
+    var stdout;
+
+    beforeEach(function () {
+      stdout = [];
+      stdoutWrite = process.stdout.write;
+      process.stdout.write = function (string, enc, callback) {
         stdout.push(string);
+        stdoutWrite.call(process.stdout, string, enc, callback);
       };
+    });
+
+    afterEach(function () {
+      process.stdout.write = stdoutWrite;
+    });
+
+    it('should write width, contents and newline for each trajectory', function () {
       var expectedWidth = 444;
 
       var expectedContents = 'input';
@@ -469,15 +502,10 @@ describe('Nyan reporter', function () {
         expectedContents,
         '\n'
       ];
-      expect(stdout).to.eql(expectedArray);
+      expect(stdout, 'to equal', expectedArray);
     });
 
     it('should call cursorUp with given numberOfLines', function () {
-      var stdout = [];
-      var stdoutWrite = process.stdout.write;
-      process.stdout.write = function (string) {
-        stdout.push(string);
-      };
       var expectedCursorArgument = null;
       var expectedNumberOfLines = 1000;
 
@@ -491,33 +519,32 @@ describe('Nyan reporter', function () {
         numberOfLines: expectedNumberOfLines
       });
 
-      expect(expectedCursorArgument).to.equal(expectedNumberOfLines);
-      process.stdout.write = stdoutWrite;
+      expect(expectedCursorArgument, 'to be', expectedNumberOfLines);
     });
   });
   describe('face', function () {
     it('expected face:(x .x) when "failures" at least one', function () {
       var nyanCat = new NyanCat({on: function () {}, once: function () {}});
       nyanCat.stats = { passes: 2, pending: 1, failures: 1 };
-      expect(nyanCat.face()).to.equal('( x .x)');
+      expect(nyanCat.face(), 'to be', '( x .x)');
     });
 
     it('expected face:(x .x) when "pending" at least one and no failing', function () {
       var nyanCat = new NyanCat({on: function () {}, once: function () {}});
       nyanCat.stats = { passes: 2, pending: 1, failures: 0 };
-      expect(nyanCat.face()).to.equal('( o .o)');
+      expect(nyanCat.face(), 'to be', '( o .o)');
     });
 
     it('expected face:(^ .^) when "passing" only', function () {
       var nyanCat = new NyanCat({on: function () {}, once: function () {}});
       nyanCat.stats = { passes: 1, pending: 0, failures: 0 };
-      expect(nyanCat.face()).to.equal('( ^ .^)');
+      expect(nyanCat.face(), 'to be', '( ^ .^)');
     });
 
     it('expected face:(- .-) when otherwise', function (done) {
       var nyanCat = new NyanCat({on: function () {}, once: function () {}});
       nyanCat.stats = { passes: 0, pending: 0, failures: 0 };
-      expect(nyanCat.face()).to.equal('( - .-)');
+      expect(nyanCat.face(), 'to be', '( - .-)');
       done();
     });
   });

@@ -23,8 +23,9 @@ describe('List reporter', function () {
   beforeEach(function () {
     stdout = [];
     stdoutWrite = process.stdout.write;
-    process.stdout.write = function (string) {
+    process.stdout.write = function (string, enc, callback) {
       stdout.push(string);
+      stdoutWrite.call(process.stdout, string, enc, callback);
     };
     useColors = Base.useColors;
     Base.useColors = false;
@@ -32,6 +33,7 @@ describe('List reporter', function () {
 
   afterEach(function () {
     Base.useColors = useColors;
+    process.stdout.write = stdoutWrite;
   });
 
   describe('on start and test', function () {
@@ -46,7 +48,7 @@ describe('List reporter', function () {
         startString,
         testString
       ];
-      expect(stdout).to.eql(expectedArray);
+      expect(stdout, 'to equal', expectedArray);
     });
   });
   describe('on pending', function () {
@@ -56,7 +58,7 @@ describe('List reporter', function () {
 
       process.stdout.write = stdoutWrite;
 
-      expect(stdout[0]).to.eql('  - ' + expectedTitle + '\n');
+      expect(stdout[0], 'to equal', '  - ' + expectedTitle + '\n');
     });
   });
   describe('on pass', function () {
@@ -71,7 +73,7 @@ describe('List reporter', function () {
 
       process.stdout.write = stdoutWrite;
 
-      expect(calledCursorCR).to.be(true);
+      expect(calledCursorCR, 'to be', true);
 
       Base.cursor = cachedCursor;
     });
@@ -86,7 +88,7 @@ describe('List reporter', function () {
 
       process.stdout.write = stdoutWrite;
 
-      expect(stdout[0]).to.equal('  ' + expectedOkSymbol + ' ' + expectedTitle + ': ' + expectedDuration + 'ms\n');
+      expect(stdout[0], 'to be', '  ' + expectedOkSymbol + ' ' + expectedTitle + ': ' + expectedDuration + 'ms\n');
 
       Base.cursor = cachedCursor;
       Base.symbols = cachedSymbols;
@@ -104,7 +106,7 @@ describe('List reporter', function () {
 
       process.stdout.write = stdoutWrite;
 
-      expect(calledCursorCR).to.be(true);
+      expect(calledCursorCR, 'to be', true);
 
       Base.cursor = cachedCursor;
     });
@@ -117,7 +119,7 @@ describe('List reporter', function () {
 
       process.stdout.write = stdoutWrite;
 
-      expect(stdout[0]).to.equal('  ' + expectedErrorCount + ') ' + expectedTitle + '\n');
+      expect(stdout[0], 'to be', '  ' + expectedErrorCount + ') ' + expectedTitle + '\n');
 
       Base.cursor = cachedCursor;
     });
@@ -140,8 +142,8 @@ describe('List reporter', function () {
       List.call({epilogue: function () {}}, runner);
 
       process.stdout.write = stdoutWrite;
-      expect(typeof err.actual).to.equal('string');
-      expect(typeof err.expected).to.equal('string');
+      expect(typeof err.actual, 'to be', 'string');
+      expect(typeof err.expected, 'to be', 'string');
     });
   });
 
@@ -156,7 +158,7 @@ describe('List reporter', function () {
       }, runner);
       process.stdout.write = stdoutWrite;
 
-      expect(calledEpilogue).to.be(true);
+      expect(calledEpilogue, 'to be', true);
     });
   });
 });

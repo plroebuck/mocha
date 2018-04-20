@@ -16,8 +16,9 @@ describe('Dot reporter', function () {
   beforeEach(function () {
     stdout = [];
     stdoutWrite = process.stdout.write;
-    process.stdout.write = function (string) {
+    process.stdout.write = function (string, enc, callback) {
       stdout.push(string);
+      stdoutWrite.call(process.stdout, string, enc, callback);
     };
     useColors = Base.useColors;
     windowWidth = Base.window.width;
@@ -28,6 +29,7 @@ describe('Dot reporter', function () {
   afterEach(function () {
     Base.useColors = useColors;
     Base.window.width = windowWidth;
+    process.stdout.write = stdoutWrite;
   });
 
   describe('on start', function () {
@@ -38,7 +40,7 @@ describe('Dot reporter', function () {
       var expectedArray = [
         '\n'
       ];
-      expect(stdout).to.eql(expectedArray);
+      expect(stdout, 'to equal', expectedArray);
     });
   });
   describe('on pending', function () {
@@ -54,7 +56,7 @@ describe('Dot reporter', function () {
           '\n  ',
           Base.symbols.comma
         ];
-        expect(stdout).to.eql(expectedArray);
+        expect(stdout, 'to equal', expectedArray);
       });
     });
     describe('if window width is equal to or less than 1', function () {
@@ -65,7 +67,7 @@ describe('Dot reporter', function () {
         var expectedArray = [
           Base.symbols.comma
         ];
-        expect(stdout).to.eql(expectedArray);
+        expect(stdout, 'to equal', expectedArray);
       });
     });
   });
@@ -87,7 +89,7 @@ describe('Dot reporter', function () {
             '\n  ',
             Base.symbols.dot
           ];
-          expect(stdout).to.eql(expectedArray);
+          expect(stdout, 'to equal', expectedArray);
         });
       });
     });
@@ -100,7 +102,7 @@ describe('Dot reporter', function () {
           var expectedArray = [
             Base.symbols.dot
           ];
-          expect(stdout).to.eql(expectedArray);
+          expect(stdout, 'to equal', expectedArray);
         });
       });
       describe('if test speed is slow', function () {
@@ -112,7 +114,7 @@ describe('Dot reporter', function () {
           var expectedArray = [
             Base.symbols.dot
           ];
-          expect(stdout).to.eql(expectedArray);
+          expect(stdout, 'to equal', expectedArray);
         });
       });
     });
@@ -135,7 +137,7 @@ describe('Dot reporter', function () {
           '\n  ',
           Base.symbols.bang
         ];
-        expect(stdout).to.eql(expectedArray);
+        expect(stdout, 'to equal', expectedArray);
       });
     });
     describe('if window width is equal to or less than 1', function () {
@@ -146,7 +148,7 @@ describe('Dot reporter', function () {
         var expectedArray = [
           Base.symbols.bang
         ];
-        expect(stdout).to.eql(expectedArray);
+        expect(stdout, 'to equal', expectedArray);
       });
     });
   });
@@ -159,7 +161,7 @@ describe('Dot reporter', function () {
       };
       Dot.call({epilogue: epilogue}, runner);
       process.stdout.write = stdoutWrite;
-      expect(epilogueCalled).to.be(true);
+      expect(epilogueCalled, 'to be', true);
     });
   });
 });

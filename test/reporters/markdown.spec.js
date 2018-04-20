@@ -16,9 +16,14 @@ describe('Markdown reporter', function () {
   beforeEach(function () {
     stdout = [];
     stdoutWrite = process.stdout.write;
-    process.stdout.write = function (string) {
+    process.stdout.write = function (string, enc, callback) {
       stdout.push(string);
+      stdoutWrite.call(process.stdout, string, enc, callback);
     };
+  });
+
+  afterEach(function () {
+    process.stdout.write = stdoutWrite;
   });
 
   describe('on \'suite\'', function () {
@@ -43,7 +48,7 @@ describe('Markdown reporter', function () {
         '<a name="' + sluggedFullTitle + '"></a>\n ' + expectedTitle + '\n'
       ];
 
-      expect(stdout).to.eql(expectedArray);
+      expect(stdout, 'to equal', expectedArray);
     });
   });
   describe('on \'pass\'', function () {
@@ -75,7 +80,7 @@ describe('Markdown reporter', function () {
         expectedTitle + '.\n\n```js\n' + expectedBody + '\n```\n\n'
       ];
 
-      expect(stdout).to.eql(expectedArray);
+      expect(stdout, 'to equal', expectedArray);
     });
   });
 });
