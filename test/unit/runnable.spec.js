@@ -335,7 +335,6 @@ describe('Runnable(title, fn)', function () {
             done(new Error('failed to throw'));
           } catch (e) {
             assert(e.message === 'fail');
-            done();
           }
           done();
         });
