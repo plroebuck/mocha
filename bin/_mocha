@@ -138,15 +138,6 @@ let globals = [];
 
 const requires = [];
 
-/**
- * Images.
- */
-
-const images = {
-  fail: path.join(__dirname, '..', 'assets', 'growl', 'error.png'),
-  pass: path.join(__dirname, '..', 'assets', 'growl', 'ok.png')
-};
-
 // options
 
 program
