@@ -5,6 +5,19 @@ var utils = mocha.utils;
 var Runnable = mocha.Runnable;
 var Suite = mocha.Suite;
 
+/**
+ * Custom assert function.
+ * Because of the below "poison pill", we cannot trust third-party code
+ * including assertion libraries, not to call the global functions we're
+ * poisoning--so we must make our own assertions.
+ * @param {*} expr - Throws if false
+ */
+function assert (expr) {
+  if (!expr) {
+    throw new Error('assertion failure');
+  }
+}
+
 describe('Runnable(title, fn)', function () {
   // For every test we poison the global time-related methods.
   // runnable.js etc. should keep its own local copy, in order to fix GH-237.
@@ -39,7 +52,7 @@ describe('Runnable(title, fn)', function () {
     it('should set the timeout', function () {
       var run = new Runnable();
       run.timeout(1000);
-      expect(run.timeout(), 'to be', 1000);
+      assert(run.timeout() === 1000);
     });
   });
 
@@ -47,7 +60,7 @@ describe('Runnable(title, fn)', function () {
     it('should set disabled', function () {
       var run = new Runnable();
       run.timeout(1e10);
-      expect(run.enableTimeouts(), 'to be', false);
+      assert(run.enableTimeouts() === false);
     });
   });
 
@@ -55,7 +68,7 @@ describe('Runnable(title, fn)', function () {
     it('should set enabled', function () {
       var run = new Runnable();
       run.enableTimeouts(false);
-      expect(run.enableTimeouts(), 'to be', false);
+      assert(run.enableTimeouts() === false);
     });
   });
 
@@ -68,23 +81,23 @@ describe('Runnable(title, fn)', function () {
 
     it('should set the slow threshold', function () {
       run.slow(100);
-      expect(run.slow(), 'to be', 100);
+      assert(run.slow() === 100);
     });
 
     it('should not set the slow threshold if the parameter is not passed', function () {
       run.slow();
-      expect(run.slow(), 'to be', 75);
+      assert(run.slow() === 75);
     });
 
     it('should not set the slow threshold if the parameter is undefined', function () {
       run.slow(undefined);
-      expect(run.slow(), 'to be', 75);
+      assert(run.slow() === 75);
     });
   });
 
   describe('.title', function () {
     it('should be present', function () {
-      expect(new Runnable('foo').title, 'to be', 'foo');
+      assert(new Runnable('foo').title === 'foo');
     });
   });
 
@@ -92,31 +105,31 @@ describe('Runnable(title, fn)', function () {
     it('returns the concatenation of the parent\'s title path and runnable\'s title', function () {
       var runnable = new Runnable('bar');
       runnable.parent = new Suite('foo');
-      expect(runnable.titlePath(), 'to equal', ['foo', 'bar']);
+      assert(JSON.stringify(runnable.titlePath()) === JSON.stringify(['foo', 'bar']));
     });
   });
 
   describe('when arity >= 1', function () {
     it('should be .async', function () {
       var run = new Runnable('foo', function (done) {});
-      expect(run.async, 'to be', 1);
-      expect(run.sync, 'to be', false);
+      assert(run.async === 1);
+      assert(run.sync === false);
     });
   });
 
   describe('when arity == 0', function () {
     it('should be .sync', function () {
       var run = new Runnable('foo', function () {});
-      expect(run.async, 'to be', 0);
-      expect(run.sync, 'to be', true);
+      assert(run.async === 0);
+      assert(run.sync === true);
     });
   });
 
   describe('#globals', function () {
     it('should allow for whitelisting globals', function (done) {
       var test = new Runnable('foo', function () {});
-      expect(test.async, 'to be', 0);
-      expect(test.sync, 'to be', true);
+      assert(test.async === 0);
+      assert(test.sync === true);
       test.globals(['foobar']);
       test.run(done);
     });
@@ -126,7 +139,7 @@ describe('Runnable(title, fn)', function () {
     it('should set the number of retries', function () {
       var run = new Runnable();
       run.retries(1);
-      expect(run.retries(), 'to be', 1);
+      assert(run.retries() === 1);
     });
   });
 
@@ -157,8 +170,8 @@ describe('Runnable(title, fn)', function () {
             }
 
             try {
-              expect(calls, 'to be', 1);
-              expect(test.duration, 'to be a', 'number');
+              assert(calls === 1);
+              assert(typeof test.duration === 'number');
             } catch (err) {
               done(err);
               return;
@@ -177,8 +190,8 @@ describe('Runnable(title, fn)', function () {
           });
 
           test.run(function (err) {
-            expect(calls, 'to be', 1);
-            expect(err.message, 'to be', 'fail');
+            assert(calls === 1);
+            assert(err.message === 'fail');
             done();
           });
         });
@@ -193,8 +206,13 @@ describe('Runnable(title, fn)', function () {
           function fail () {
             test.run(function () {});
           }
-          expect(fail, 'to throw', 'fail');
-          done();
+          try {
+            fail();
+            done(new Error('failed to throw'));
+          } catch (e) {
+            assert(e.message === 'fail');
+            done();
+          }
         });
       });
     });
@@ -238,9 +256,9 @@ describe('Runnable(title, fn)', function () {
 
             test.on('error', function (err) {
               ++errCalls;
-              expect(err.message, 'to be', 'done() called multiple times');
-              expect(calls, 'to be', 1);
-              expect(errCalls, 'to be', 1);
+              assert(err.message === 'done() called multiple times');
+              assert(calls === 1);
+              assert(errCalls === 1);
               done();
             });
 
@@ -265,9 +283,9 @@ describe('Runnable(title, fn)', function () {
 
             test.on('error', function (err) {
               ++errCalls;
-              expect(err.message, 'to be', "fail (and Mocha's done() called multiple times)");
-              expect(calls, 'to be', 1);
-              expect(errCalls, 'to be', 1);
+              assert(err.message === "fail (and Mocha's done() called multiple times)");
+              assert(calls === 1);
+              assert(errCalls === 1);
               done();
             });
 
@@ -285,7 +303,7 @@ describe('Runnable(title, fn)', function () {
           });
 
           test.run(function (err) {
-            expect(err.message, 'to be', 'fail');
+            assert(err.message === 'fail');
             done();
           });
         });
@@ -297,7 +315,7 @@ describe('Runnable(title, fn)', function () {
           });
 
           test.run(function (err) {
-            expect(err.message, 'to be', utils.undefinedError().message);
+            assert(err.message === utils.undefinedError().message);
             done();
           });
         });
@@ -312,7 +330,13 @@ describe('Runnable(title, fn)', function () {
           function fail () {
             test.run(function () {});
           }
-          expect(fail, 'to throw', 'fail');
+          try {
+            fail();
+            done(new Error('failed to throw'));
+          } catch (e) {
+            assert(e.message === 'fail');
+            done();
+          }
           done();
         });
       });
@@ -324,7 +348,7 @@ describe('Runnable(title, fn)', function () {
           });
 
           test.run(function (err) {
-            expect(err.message, 'to be', 'fail');
+            assert(err.message === 'fail');
             done();
           });
         });
@@ -337,7 +361,7 @@ describe('Runnable(title, fn)', function () {
           });
 
           test.run(function (err) {
-            expect(err.message, 'to be', 'done() invoked with non-Error: {"error":"Test error"}');
+            assert(err.message === 'done() invoked with non-Error: {"error":"Test error"}');
             done();
           });
         });
@@ -350,7 +374,7 @@ describe('Runnable(title, fn)', function () {
           });
 
           test.run(function (err) {
-            expect(err.message, 'to be', 'done() invoked with non-Error: Test error');
+            assert(err.message === 'done() invoked with non-Error: Test error');
             done();
           });
         });
@@ -367,8 +391,8 @@ describe('Runnable(title, fn)', function () {
         });
         test.timeout(50);
         test.run(function (err) {
-          expect(err, 'to be ok');
-          expect(callCount, 'to be', 1);
+          assert(err);
+          assert(callCount === 1);
           done();
         });
       });
@@ -427,7 +451,7 @@ describe('Runnable(title, fn)', function () {
           });
 
           test.run(function (err) {
-            expect(err, 'to be', expectedErr);
+            assert(err === expectedErr);
             done();
           });
         });
@@ -449,7 +473,7 @@ describe('Runnable(title, fn)', function () {
           });
 
           test.run(function (err) {
-            expect(err.message, 'to be', expectedErr.message);
+            assert(err.message === expectedErr.message);
             done();
           });
         });
@@ -468,7 +492,7 @@ describe('Runnable(title, fn)', function () {
 
           test.timeout(10);
           test.run(function (err) {
-            expect(err, 'to have message', /Timeout of 10ms exceeded.*\(\/some\/path\)$/);
+            assert(/Timeout of 10ms exceeded.*\(\/some\/path\)$/.test(err.message));
             done();
           });
         });
@@ -492,7 +516,7 @@ describe('Runnable(title, fn)', function () {
       });
       // runner sets the state
       test.run(function () {
-        expect(test.isFailed(), 'not to be ok');
+        assert(!test.isFailed());
       });
     });
 
@@ -502,7 +526,7 @@ describe('Runnable(title, fn)', function () {
       // runner sets the state
       test.state = 'failed';
       test.run(function () {
-        expect(test.isFailed(), 'not to be ok');
+        assert(!test.isFailed());
       });
     });
 
@@ -514,7 +538,7 @@ describe('Runnable(title, fn)', function () {
         return true;
       };
       test.run(function () {
-        expect(test.isFailed(), 'not to be ok');
+        assert(!test.isFailed());
       });
     });
   });

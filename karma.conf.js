@@ -18,7 +18,6 @@ module.exports = config => {
   const cfg = {
     frameworks: [
       'browserify',
-      'unexpected',
       'mocha'
     ],
     files: [
@@ -151,6 +150,12 @@ module.exports = config => {
         cfg.sauceLabs.testName = 'Unit Tests';
       }
   }
+
+  cfg.files.unshift(
+    'node_modules/unexpected/unexpected.js',
+    {pattern: 'node_modules/unexpected/unexpected.js.map', included: false},
+    'test/browser-specific/setup.js'
+  );
 
   config.set(cfg);
 };
