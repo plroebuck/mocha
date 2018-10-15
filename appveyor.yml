@@ -1,3 +1,7 @@
+###
+### appveyor.yml
+###
+
 platform:
   - x64
 environment:
@@ -12,6 +16,7 @@ install:
   - set PATH=%APPDATA%\npm;c:\MinGW\bin;%PATH%
   - npm install -g npm@^5
   - npm ci --ignore-scripts
+  - cinst growl
 matrix:
   fast_finish: true
 build: off
