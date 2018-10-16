@@ -13,9 +13,9 @@ environment:
 install:
   - ps: Install-Product node $env:nodejs_version x64
   - set CI=true
-  - echo PATH=%PROGRAMFILES(X86)%\Growl for Windows;%PATH%
   - set PATH=%PROGRAMFILES(X86)%\Growl for Windows;%PATH%
-  - set PATH=%APPDATA%\npm;%HOMEDRIVE%:\MinGW\bin;%PATH%
+  - set PATH=%APPDATA%\npm;C:\MinGW\bin;%PATH%
+  - set
   - npm install -g npm@^5
   - npm ci --ignore-scripts
   ## Chocolatey Growl install fails -- out of date package metadata
@@ -25,7 +25,7 @@ install:
   - ps: $exePath = "$($env:USERPROFILE)\Downloads\$exeFile"
   - ps: $exeURL = "http://www.growlforwindows.com/gfw/downloads/$exeFile"
   - ps: (New-Object Net.WebClient).DownloadFile($exeURL, $exePath)
-  - ps: $instPath = "$($env:HOMEDRIVE):\GrowlInstaller"
+  - ps: $instPath = "C:\GrowlInstaller"
   - ps: $instMSI = "Growl_v2.0.msi"
   - ps: mkdir $instPath
   - ps: 7z x $exePath -o$instPath | out-null
