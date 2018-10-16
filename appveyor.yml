@@ -19,16 +19,19 @@ install:
   - ps: $exeFile = "GrowlInstaller.exe"
   - ps: $exePath = "$($env:USERPROFILE)\Downloads\$exeFile"
   - ps: $exeURL = "http://www.growlforwindows.com/gfw/downloads/$exeFile"
+  - ps: echo "*** download"
   - ps: (New-Object Net.WebClient).DownloadFile($exeURL, $exePath)
   - ps: $?
   - ps: $instPath = "C:\GrowlInstaller"
   - ps: $instMSI = "Growl_v2.0.msi"
   - ps: mkdir $instPath
+  - ps: echo "*** dearchive"
   #- ps: 7z x $exePath -o$instPath | out-null
   - ps: 7z x $exePath -o$instPath | out-null
   - ps: $?
   - ps: echo "*** GrowlInstaller"
-  - ps: dir "$instPath"
+  - ps: dir "C:\GrowlInstaller"
+  - ps: echo "*** Run installer"
   - ps: cmd /c start /wait msiexec /i $instPath\$instMSI /quiet
   - ps: $?
   #- ps: rm $exePath
@@ -44,6 +47,7 @@ install:
   - ps: echo "*** Growl for Windows"
   - ps: dir "C:\Program Files (x86)\Growl for Windows"
   - ps: growlnotify test
+  - ps: echo "###################################"
   - ps: Install-Product node $env:nodejs_version x64
   - npm install -g npm@^5
   - npm ci --ignore-scripts
