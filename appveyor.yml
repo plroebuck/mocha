@@ -32,7 +32,8 @@ install:
   - ps: echo "*** GrowlInstaller"
   - ps: dir "C:\GrowlInstaller"
   - ps: echo "*** Run installer"
-  - ps: cmd /c start /wait msiexec /i "$instPath\$instMSI" /quiet
+  #- ps: cmd /c start /wait msiexec /i "$instPath\$instMSI" /quiet
+  - ps: cmd /c start /wait msiexec /i "C:\GrowlInstaller\Growl_v2.0.msi" /quiet
   - ps: $?
   #- ps: rm $exePath
   #- ps: rmdir -r $instPath
