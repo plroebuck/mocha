@@ -23,7 +23,8 @@ install:
   - ps: $instPath = "C:\GrowlInstaller"
   - ps: $instMSI = "Growl_v2.0.msi"
   - ps: mkdir $instPath
-  - ps: 7z x $exePath -o$instPath | out-null
+  #- ps: 7z x $exePath -o$instPath | out-null
+  - ps: 7z x $exePath -o$instPath
   - ps: cmd /c start /wait msiexec /i $instPath\$instMSI /quiet
   #- ps: rm $exePath
   #- ps: rmdir -r $instPath
