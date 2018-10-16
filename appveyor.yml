@@ -27,7 +27,8 @@ install:
   #- ps: rm $exePath
   - ps: cmd /c start /wait msiexec /i $instPath\$instMSI /quiet
   #- ps: rmdir -r $instPath
-  - dir %PROGRAMFILES(X86)%\Growl for Windows
+  - dir C:\Program Files (x86)
+  - dir C:\Program Files (x86)\Growl for Windows
   - ps: growlnotify test
   - ps: Install-Product node $env:nodejs_version x64
   - npm install -g npm@^5
