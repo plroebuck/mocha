@@ -20,22 +20,27 @@ install:
   - ps: $exePath = "$($env:USERPROFILE)\Downloads\$exeFile"
   - ps: $exeURL = "http://www.growlforwindows.com/gfw/downloads/$exeFile"
   - ps: (New-Object Net.WebClient).DownloadFile($exeURL, $exePath)
+  - ps: $?
   - ps: $instPath = "C:\GrowlInstaller"
   - ps: $instMSI = "Growl_v2.0.msi"
   - ps: mkdir $instPath
   #- ps: 7z x $exePath -o$instPath | out-null
-  - ps: 7z x $exePath -o$instPath
+  - ps: 7z x $exePath -o$instPath | out-null
+  - ps: $?
+  - ps: echo "*** GrowlInstaller"
+  - ps: dir $instPath
   - ps: cmd /c start /wait msiexec /i $instPath\$instMSI /quiet
+  - ps: $?
   #- ps: rm $exePath
   #- ps: rmdir -r $instPath
-  - echo "*** root"
-  - dir C:\
-  - echo "*** GrowlInstaller"
-  - dir C:\GrowlInstaller
-  - echo "*** Program Files (x86)"
-  - dir C:\Program Files (x86)
-  - echo "*** Growl for Windows"
-  - dir C:\Program Files (x86)\Growl for Windows
+  - ps: echo "*** root"
+  - ps: dir C:\
+  - ps: echo "*** GrowlInstaller"
+  - ps: dir C:\GrowlInstaller
+  - ps: echo "*** Program Files (x86)"
+  - ps: dir C:\Program Files (x86)
+  - ps: echo "*** Growl for Windows"
+  - ps: dir C:\Program Files (x86)\Growl for Windows
   - ps: growlnotify test
   - ps: Install-Product node $env:nodejs_version x64
   - npm install -g npm@^5
