@@ -32,6 +32,7 @@ install:
   #- ps: rm $exePath
   - ps: cmd /c start /wait msiexec /i $instPath\$instMSI /quiet
   #- ps: rmdir -r $instPath
+  - ps: growlnotify test
 matrix:
   fast_finish: true
 build: off
