@@ -28,7 +28,7 @@ install:
   - ps: 7z x $exePath -o$instPath | out-null
   - ps: $?
   - ps: echo "*** GrowlInstaller"
-  - ps: dir $instPath
+  - ps: dir "$instPath"
   - ps: cmd /c start /wait msiexec /i $instPath\$instMSI /quiet
   - ps: $?
   #- ps: rm $exePath
@@ -37,6 +37,8 @@ install:
   - ps: dir C:\
   - ps: echo "*** GrowlInstaller"
   - ps: dir C:\GrowlInstaller\
+  - ps: echo "*** Program Files"
+  - ps: dir "C:\Program Files"
   - ps: echo "*** Program Files (x86)"
   - ps: dir "C:\Program Files (x86)"
   - ps: echo "*** Growl for Windows"
