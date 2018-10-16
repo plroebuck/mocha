@@ -29,9 +29,9 @@ install:
   - ps: $instMSI = "Growl_v2.0.msi"
   - ps: mkdir $instPath
   - ps: 7z x $exePath -o$instPath | out-null
-  - ps: rm $exePath
+  #- ps: rm $exePath
   - ps: cmd /c start /wait msiexec /i $instPath\$instMSI /quiet
-  - ps: rmdir -r $instPath
+  #- ps: rmdir -r $instPath
 matrix:
   fast_finish: true
 build: off
