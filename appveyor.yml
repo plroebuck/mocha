@@ -13,10 +13,25 @@ environment:
 install:
   - ps: Install-Product node $env:nodejs_version x64
   - set CI=true
-  - set PATH=%APPDATA%\npm;c:\MinGW\bin;%PATH%
+  - echo PATH=%PROGRAMFILES(X86)%\Growl for Windows;%PATH%
+  - set PATH=%PROGRAMFILES(X86)%\Growl for Windows;%PATH%
+  - set PATH=%APPDATA%\npm;%HOMEDRIVE%:\MinGW\bin;%PATH%
   - npm install -g npm@^5
   - npm ci --ignore-scripts
-  - cinst growl
+  ## Chocolatey Growl install fails -- out of date package metadata
+  #- cinst growl
+  ## Manual Growl install
+  - ps: $exeFile = "GrowlInstaller.exe"
+  - ps: $exePath = "$($env:USERPROFILE)\Downloads\$exeFile"
+  - ps: $exeURL = "http://www.growlforwindows.com/gfw/downloads/$exeFile"
+  - ps: (New-Object Net.WebClient).DownloadFile($exeURL, $exePath)
+  - ps: $instPath = "$($env:HOMEDRIVE):\GrowlInstaller"
+  - ps: $instMSI = "Growl_v2.0.msi"
+  - ps: mkdir $instPath
+  - ps: 7z x $exePath -o$instPath | out-null
+  - ps: rm $exePath
+  - ps: cmd /c start /wait msiexec /i $instPath\$instMSI /quiet
+  - ps: rmdir -r $instPath
 matrix:
   fast_finish: true
 build: off
