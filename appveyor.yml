@@ -36,11 +36,11 @@ install:
   - ps: echo "*** root"
   - ps: dir C:\
   - ps: echo "*** GrowlInstaller"
-  - ps: dir C:\GrowlInstaller
+  - ps: dir C:\GrowlInstaller\
   - ps: echo "*** Program Files (x86)"
-  - ps: dir C:\Program Files (x86)
+  - ps: dir "C:\Program Files (x86)"
   - ps: echo "*** Growl for Windows"
-  - ps: dir C:\Program Files (x86)\Growl for Windows
+  - ps: dir "C:\Program Files (x86)\Growl for Windows"
   - ps: growlnotify test
   - ps: Install-Product node $env:nodejs_version x64
   - npm install -g npm@^5
