@@ -11,15 +11,10 @@ environment:
     - nodejs_version: '8'
     - nodejs_version: '6'
 install:
-  - ps: Install-Product node $env:nodejs_version x64
   - set CI=true
   - set PATH=%PROGRAMFILES(X86)%\Growl for Windows;%PATH%
   - set PATH=%APPDATA%\npm;C:\MinGW\bin;%PATH%
   - set
-  - npm install -g npm@^5
-  - npm ci --ignore-scripts
-  ## Chocolatey Growl install fails -- out of date package metadata
-  #- cinst growl
   ## Manual Growl install
   - ps: $exeFile = "GrowlInstaller.exe"
   - ps: $exePath = "$($env:USERPROFILE)\Downloads\$exeFile"
@@ -32,7 +27,13 @@ install:
   #- ps: rm $exePath
   - ps: cmd /c start /wait msiexec /i $instPath\$instMSI /quiet
   #- ps: rmdir -r $instPath
+  - dir %PROGRAMFILES(X86)%\Growl for Windows
   - ps: growlnotify test
+  - ps: Install-Product node $env:nodejs_version x64
+  - npm install -g npm@^5
+  - npm ci --ignore-scripts
+  ## Chocolatey Growl install fails -- out of date package metadata
+  #- cinst growl
 matrix:
   fast_finish: true
 build: off
