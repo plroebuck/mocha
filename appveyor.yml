@@ -7,9 +7,9 @@ platform:
 environment:
   matrix:
     - nodejs_version: '10'
-    - nodejs_version: '9'
-    - nodejs_version: '8'
-    - nodejs_version: '6'
+    #- nodejs_version: '9'
+    #- nodejs_version: '8'
+    #- nodejs_version: '6'
 install:
   - set CI=true
   - set PATH=%PROGRAMFILES(X86)%\Growl for Windows;%PATH%
@@ -27,7 +27,11 @@ install:
   #- ps: rm $exePath
   - ps: cmd /c start /wait msiexec /i $instPath\$instMSI /quiet
   #- ps: rmdir -r $instPath
+  - echo "*** root"
+  - dir C:\
+  - echo "*** Program Files (x86)"
   - dir C:\Program Files (x86)
+  - echo "*** Growl for Windows"
   - dir C:\Program Files (x86)\Growl for Windows
   - ps: growlnotify test
   - ps: Install-Product node $env:nodejs_version x64
