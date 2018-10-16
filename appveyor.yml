@@ -34,9 +34,9 @@ install:
   #- ps: rm $exePath
   #- ps: rmdir -r $instPath
   - ps: echo "*** root"
-  - ps: dir C:\
+  - ps: dir "C:\"
   - ps: echo "*** GrowlInstaller"
-  - ps: dir C:\GrowlInstaller\
+  - ps: dir "C:\GrowlInstaller"
   - ps: echo "*** Program Files"
   - ps: dir "C:\Program Files"
   - ps: echo "*** Program Files (x86)"
