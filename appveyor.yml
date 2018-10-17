@@ -16,8 +16,12 @@ install:
   - set PATH=%APPDATA%\npm;C:\MinGW\bin;%PATH%
   - set
   ## Manual Growl install
-  - ps: $exePath = "$($env:USERPROFILE)\GrowlInstaller.exe"
-  - ps: (New-Object Net.WebClient).DownloadFile('http://www.growlforwindows.com/gfw/downloads/GrowlInstaller.exe', $exePath)
+  - ps: $exeFile = "GrowlInstaller.exe"
+  - ps: $exeDir  = "$($env:USERPROFILE)"
+  - ps: $exePath = "$exeDir\$exeFile"
+  - ps: $exeURL = "http://www.growlforwindows.com/gfw/downloads/$exeFile"
+  #- ps: (New-Object Net.WebClient).DownloadFile('http://www.growlforwindows.com/gfw/downloads/GrowlInstaller.exe', $exePath)
+  - ps: (New-Object Net.WebClient).DownloadFile($exeURL, $exePath)
   - ps: mkdir C:\GrowlInstaller
   - ps: 7z x $exePath -oC:\GrowlInstaller | out-null
   - ps: cmd /c start /wait msiexec /i C:\GrowlInstaller\Growl_v2.0.msi /quiet
@@ -48,6 +52,7 @@ install:
   #- ps: $?
   #- ps: rm $exePath
   #- ps: rmdir -r $instPath
+  - ps: Start-Process -NoNewWindow Growl
   - ps: echo "*** root"
   - ps: dir "C:\"
   - ps: echo "*** home"
@@ -59,6 +64,7 @@ install:
   - ps: echo "*** Growl for Windows"
   - ps: dir "C:\Program Files (x86)\Growl for Windows"
   - ps: echo "###################################"
+  - ps: growlnotify test
   - ps: Install-Product node $env:nodejs_version x64
   - npm install -g npm@^5
   - npm ci --ignore-scripts
@@ -73,6 +79,7 @@ clone_depth: 1
 before_test:
   - ps: Add-AppveyorMessage "Starting Growl service..."
   - ps: Start-Process -NoNewWindow Growl
+  ## To test, uncomment next two lines
   - ps: Start-Sleep -Seconds 1
   - ps: growlnotify test
 test_script:
