@@ -66,18 +66,14 @@ install:
   #- cinst growl
 matrix:
   fast_finish: true
-before_build:
-  - ps: Add-AppveyorMessage "before_build run if build turned off?"
-  - ps: Start-Process -NoNewWindow Growl
-  - ps: growlnotify /t:"before_build" test
 build: off
 version: '{build}'
 shallow_clone: true
 clone_depth: 1
 before_test:
-  - ps: Add-AppveyorMessage "Before testing"
-
-
+  - ps: Add-AppveyorMessage "before_test: Starting Growl service"
+  - ps: Start-Process -NoNewWindow Growl
+  - ps: growlnotify /t:"before_build" test
 test_script:
   - node --version
   - npm --version
