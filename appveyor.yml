@@ -71,7 +71,7 @@ version: '{build}'
 shallow_clone: true
 clone_depth: 1
 before_test:
-  - ps: Add-AppveyorMessage "before_test: Starting Growl service"
+  - ps: Add-AppveyorMessage "Starting Growl service..."
   - ps: Start-Process -NoNewWindow Growl
   - ps: growlnotify /t:"before_build" test
 test_script:
