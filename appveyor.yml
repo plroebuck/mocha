@@ -27,7 +27,8 @@ install:
   - ps: Install-Product node $env:nodejs_version x64
   - ps: Add-AppveyorMessage "Installing npm..."
   - npm install -g npm@^5
-  - ps: Add-AppveyorMessage "Installing Mocha dependent packages..."
+  ## Mocha-related package installs
+  - ps: Add-AppveyorMessage "Installing Mocha dependencies..."
   - npm ci --ignore-scripts
 matrix:
   fast_finish: true
@@ -36,6 +37,7 @@ version: '{build}'
 shallow_clone: true
 clone_depth: 1
 before_test:
+  - set CI=true
   #- ps: Add-AppveyorMessage "Verify Growl works..."
   #- ps: growlnotify test
   - ps: Add-AppveyorMessage "Checking versions..."
