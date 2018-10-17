@@ -11,19 +11,19 @@ environment:
     #- nodejs_version: '8'
     #- nodejs_version: '6'
 install:
-  - set CI=true
   ## Manual Growl install
   - ps: Add-AppveyorMessage "Installing Growl..."
   - ps: $exePath = "$($env:USERPROFILE)\GrowlInstaller.exe"
   - ps: (New-Object Net.WebClient).DownloadFile('http://www.growlforwindows.com/gfw/downloads/GrowlInstaller.exe', $exePath)
-  - ps: mkdir C:\GrowlInstaller
+  - ps: mkdir C:\GrowlInstaller | out-null
   - ps: 7z x $exePath -oC:\GrowlInstaller | out-null
   - ps: cmd /c start /wait msiexec /i C:\GrowlInstaller\Growl_v2.0.msi /quiet
   - ps: $env:path = "C:\Program Files (x86)\Growl for Windows;$env:path"
   - ps: Add-AppveyorMessage "Starting Growl service..."
   - ps: Start-Process -NoNewWindow Growl
-  - set PATH=%APPDATA%\npm;C:\MinGW\bin;%PATH%
+  ## Node-related installs
   - ps: Add-AppveyorMessage "Installing Node..."
+  - set PATH=%APPDATA%\npm;C:\MinGW\bin;%PATH%
   - ps: Install-Product node $env:nodejs_version x64
   - ps: Add-AppveyorMessage "Installing npm..."
   - npm install -g npm@^5
@@ -36,8 +36,8 @@ version: '{build}'
 shallow_clone: true
 clone_depth: 1
 before_test:
-  - ps: Add-AppveyorMessage "Verify Growl works..."
-  - ps: growlnotify test
+  #- ps: Add-AppveyorMessage "Verify Growl works..."
+  #- ps: growlnotify test
   - ps: Add-AppveyorMessage "Checking versions..."
   - node --version
   - npm --version
