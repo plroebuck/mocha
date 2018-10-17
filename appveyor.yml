@@ -67,10 +67,6 @@ install:
   #- cinst growl
 matrix:
   fast_finish: true
-after_install:
-  - ps: Add-AppveyorMessage "after_install exists?"
-  - ps: Start-Process -NoNewWindow Growl
-  - ps: growlnotify test
 before_build:
   - ps: Add-AppveyorMessage "before_build run if build turned off?"
   - ps: Start-Process -NoNewWindow Growl
