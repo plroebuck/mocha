@@ -75,7 +75,7 @@ clone_depth: 1
 before_test:
   - ps: Add-AppveyorMessage "Starting Growl service..."
   - ps: Start-Process -NoNewWindow Growl
-  - ps: Start-Sleep -Milliseconds 500
+  - ps: Start-Sleep -Seconds 1
   ## To test, uncomment next line
   - ps: growlnotify test
 test_script:
