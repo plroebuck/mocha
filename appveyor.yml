@@ -22,6 +22,7 @@ install:
   - ps: 7z x $exePath -oC:\GrowlInstaller | out-null
   - ps: cmd /c start /wait msiexec /i C:\GrowlInstaller\Growl_v2.0.msi /quiet
   - ps: $env:path = "C:\Program Files (x86)\Growl for Windows;$env:path"
+  - ps: Add-AppveyorMessage "Growl installed"
   - ps: Start-Process -NoNewWindow Growl
   #- ps: $exeFile = "GrowlInstaller.exe"
   #- ps: $exeDir  = "$($env:USERPROFILE)\Downloads"
@@ -58,7 +59,6 @@ install:
   - ps: dir "C:\Program Files (x86)"
   - ps: echo "*** Growl for Windows"
   - ps: dir "C:\Program Files (x86)\Growl for Windows"
-  - ps: growlnotify test
   - ps: echo "###################################"
   - ps: Install-Product node $env:nodejs_version x64
   - npm install -g npm@^5
@@ -67,10 +67,22 @@ install:
   #- cinst growl
 matrix:
   fast_finish: true
+after_install:
+  - ps: Add-AppveyorMessage "after_install exists?"
+  - ps: Start-Process -NoNewWindow Growl
+  - ps: growlnotify test
+before_build:
+  - ps: Add-AppveyorMessage "before_build run if build turned off?"
+  - ps: Start-Process -NoNewWindow Growl
+  - ps: growlnotify test
 build: off
 version: '{build}'
 shallow_clone: true
 clone_depth: 1
+before_test:
+  - ps: Add-AppveyorMessage "Before testing"
+
+
 test_script:
   - node --version
   - npm --version
