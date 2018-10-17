@@ -12,33 +12,43 @@ environment:
     #- nodejs_version: '6'
 install:
   - set CI=true
-  - set PATH=%PROGRAMFILES(X86)%\Growl for Windows;%PATH%
+  #- set PATH=%PROGRAMFILES(X86)%\Growl for Windows;%PATH%
   - set PATH=%APPDATA%\npm;C:\MinGW\bin;%PATH%
   - set
   ## Manual Growl install
-  - ps: $exeFile = "GrowlInstaller.exe"
-  - ps: $exePath = "$($env:USERPROFILE)\Downloads\$exeFile"
-  - ps: $exeURL = "http://www.growlforwindows.com/gfw/downloads/$exeFile"
-  - ps: echo "*** download"
-  - ps: (New-Object Net.WebClient).DownloadFile($exeURL, $exePath)
-  - ps: $?
-  - ps: $instPath = "C:\GrowlInstaller"
-  - ps: $instMSI = "Growl_v2.0.msi"
-  - ps: mkdir $instPath
-  - ps: echo "*** dearchive"
-  #- ps: 7z x $exePath -o$instPath | out-null
-  - ps: 7z x $exePath -o$instPath | out-null
-  - ps: $?
-  - ps: echo "*** GrowlInstaller"
-  - ps: dir "C:\GrowlInstaller"
-  - ps: echo "*** Run installer"
-  #- ps: cmd /c start /wait msiexec /i "$instPath\$instMSI" /quiet
-  - ps: cmd /c start /wait msiexec /i "C:\GrowlInstaller\Growl_v2.0.msi" /quiet
-  - ps: $?
+  - ps: $exePath = "$($env:USERPROFILE)\GrowlInstaller.exe"
+  - ps: (New-Object Net.WebClient).DownloadFile('http://www.growlforwindows.com/gfw/downloads/GrowlInstaller.exe', $exePath)
+  - ps: mkdir C:\GrowlInstaller
+  - ps: 7z x $exePath -oC:\GrowlInstaller | out-null
+  - ps: cmd /c start /wait msiexec /i C:\GrowlInstaller\Growl_v2.0.msi /quiet
+  - ps: $env:path = "C:\Program Files (x86)\Growl for Windows;$env:path"
+  #- ps: $exeFile = "GrowlInstaller.exe"
+  #- ps: $exeDir  = "$($env:USERPROFILE)\Downloads"
+  #- ps: $exePath = "$exeDir\$exeFile"
+  #- ps: $exeURL = "http://www.growlforwindows.com/gfw/downloads/$exeFile"
+  #- ps: echo "*** download"
+  #- ps: (New-Object Net.WebClient).DownloadFile($exeURL, $exePath)
+  #- ps: $?
+  #- ps: $instFile = "Growl_v2.0.msi"
+  #- ps: $instDir = "C:\GrowlInstaller"
+  #- ps: $instPath = "$instDir/$instFile"
+  #- ps: mkdir $instPath
+  #- ps: echo "*** dearchive"
+  #- ps: 7z x $exePath -o$instDir | out-null
+  #- ps: 7z x $exePath -o$instDir | out-null
+  #- ps: $?
+  #- ps: echo "*** GrowlInstaller"
+  #- ps: dir "C:\GrowlInstaller"
+  #- ps: echo "*** Run installer"
+  #- ps: cmd /c start /wait msiexec /i "$instPath" /quiet
+  #- ps: cmd /c start /wait msiexec /i "C:\GrowlInstaller\Growl_v2.0.msi" /quiet
+  #- ps: $?
   #- ps: rm $exePath
   #- ps: rmdir -r $instPath
   - ps: echo "*** root"
   - ps: dir "C:\"
+  - ps: echo "*** home"
+  - ps: dir "%HOMEPATH%"
   - ps: echo "*** GrowlInstaller"
   - ps: dir "C:\GrowlInstaller"
   - ps: echo "*** Program Files"
