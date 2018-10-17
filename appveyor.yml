@@ -52,8 +52,6 @@ install:
   - ps: dir "\Users\appveyor"
   - ps: echo "*** GrowlInstaller"
   - ps: dir "C:\GrowlInstaller"
-  - ps: echo "*** Program Files"
-  - ps: dir "C:\Program Files"
   - ps: echo "*** Program Files (x86)"
   - ps: dir "C:\Program Files (x86)"
   - ps: echo "*** Growl for Windows"
@@ -74,7 +72,7 @@ before_test:
   - ps: Add-AppveyorMessage "Starting Growl service..."
   - ps: Start-Process -NoNewWindow Growl
   - ps: Start-Sleep -Milliseconds 250
-  - ps: growlnotify "before_test\u003A test"
+  - ps: growlnotify test
 test_script:
   - node --version
   - npm --version
