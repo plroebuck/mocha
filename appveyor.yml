@@ -48,7 +48,7 @@ install:
   - ps: echo "*** root"
   - ps: dir "C:\"
   - ps: echo "*** home"
-  - ps: dir "%HOMEPATH%"
+  - ps: dir "\Users\appveyor"
   - ps: echo "*** GrowlInstaller"
   - ps: dir "C:\GrowlInstaller"
   - ps: echo "*** Program Files"
