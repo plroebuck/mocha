@@ -22,6 +22,7 @@ install:
   - ps: 7z x $exePath -oC:\GrowlInstaller | out-null
   - ps: cmd /c start /wait msiexec /i C:\GrowlInstaller\Growl_v2.0.msi /quiet
   - ps: $env:path = "C:\Program Files (x86)\Growl for Windows;$env:path"
+  - ps: Start-Process -NoNewWindow Growl
   #- ps: $exeFile = "GrowlInstaller.exe"
   #- ps: $exeDir  = "$($env:USERPROFILE)\Downloads"
   #- ps: $exePath = "$exeDir\$exeFile"
