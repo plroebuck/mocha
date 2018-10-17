@@ -74,7 +74,7 @@ before_test:
   - ps: Add-AppveyorMessage "Starting Growl service..."
   - ps: Start-Process -NoNewWindow Growl
   - ps: Start-Sleep -Milliseconds 250
-  - ps: growlnotify /t "before_build" test
+  - ps: growlnotify "before_test: test"
 test_script:
   - node --version
   - npm --version
