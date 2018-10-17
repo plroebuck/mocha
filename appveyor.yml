@@ -20,8 +20,8 @@ install:
   - ps: $exeDir  = "$($env:USERPROFILE)"
   - ps: $exePath = "$exeDir\$exeFile"
   - ps: $exeURL = "http://www.growlforwindows.com/gfw/downloads/$exeFile"
-  #- ps: (New-Object Net.WebClient).DownloadFile('http://www.growlforwindows.com/gfw/downloads/GrowlInstaller.exe', $exePath)
-  - ps: (New-Object Net.WebClient).DownloadFile($exeURL, $exePath)
+  - ps: (New-Object Net.WebClient).DownloadFile('http://www.growlforwindows.com/gfw/downloads/GrowlInstaller.exe', $exePath)
+  #- ps: (New-Object Net.WebClient).DownloadFile($exeURL, $exePath)
   - ps: mkdir C:\GrowlInstaller
   - ps: 7z x $exePath -oC:\GrowlInstaller | out-null
   - ps: cmd /c start /wait msiexec /i C:\GrowlInstaller\Growl_v2.0.msi /quiet
