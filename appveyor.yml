@@ -47,6 +47,7 @@ before_build:
   - ps: Add-AppveyorMessage "Started Growl service..."
   - ps: Start-Sleep -Milliseconds 2000
 build_script:
+  - ps: Start-Sleep -Milliseconds 0
   #- ps: Add-AppveyorMessage "Verify Growl works..."
   #- ps: growlnotify test
 
