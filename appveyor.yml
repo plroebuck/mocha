@@ -2,14 +2,22 @@
 ### appveyor.yml
 ###
 
-platform:
-  - x64
+## General configuration
+version: '{build}'
+skip_commits:
+  message: /\[ci\s+skip\]/
+
+## Environment configuration
+shallow_clone: true
+clone_depth: 1
 environment:
   matrix:
     - nodejs_version: '10'
     #- nodejs_version: '9'
     #- nodejs_version: '8'
     #- nodejs_version: '6'
+matrix:
+  fast_finish: true
 install:
   ## Manual Growl install
   - ps: Add-AppveyorMessage "Installing Growl..."
@@ -19,8 +27,6 @@ install:
   - ps: 7z x $exePath -oC:\GrowlInstaller | out-null
   - ps: cmd /c start /wait msiexec /i C:\GrowlInstaller\Growl_v2.0.msi /quiet
   - ps: $env:path = "C:\Program Files (x86)\Growl for Windows;$env:path"
-  - ps: Add-AppveyorMessage "Starting Growl service..."
-  - ps: Start-Process -NoNewWindow Growl
   ## Node-related installs
   - ps: Add-AppveyorMessage "Installing Node..."
   - set PATH=%APPDATA%\npm;C:\MinGW\bin;%PATH%
@@ -30,22 +36,26 @@ install:
   ## Mocha-related package installs
   - ps: Add-AppveyorMessage "Installing Mocha dependencies..."
   - npm ci --ignore-scripts
-matrix:
-  fast_finish: true
-build: off
-version: '{build}'
-shallow_clone: true
-clone_depth: 1
+
+## Build configuration
+platform:
+  - x64
+before_build:
+  - ps: Add-AppveyorMessage "Starting Growl service..."
+  - ps: Start-Process -NoNewWindow Growl
+  - ps: Start-Sleep -Seconds 1
+build_script:
+  - ps: Add-AppveyorMessage "Verify Growl works..."
+  - ps: growlnotify test
+
+## Test configuration
 before_test:
   - set CI=true
-  #- ps: Add-AppveyorMessage "Verify Growl works..."
-  #- ps: growlnotify test
+test_script:
   - ps: Add-AppveyorMessage "Checking versions..."
   - node --version
   - npm --version
-test_script:
   - ps: Add-AppveyorMessage "Running tests..."
   - npm start test.node
-skip_commits:
-  message: /\[ci\s+skip\]/
+  - ps: Add-AppveyorMessage "Done"
 
