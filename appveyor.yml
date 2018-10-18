@@ -41,12 +41,11 @@ install:
 platform:
   - x64
 before_build:
-  - ps: Add-AppveyorMessage "Starting Growl service..."
   - ps: Start-Process -NoNewWindow Growl
+  - ps: Add-AppveyorMessage "Started Growl service..."
   - ps: Start-Sleep -Milliseconds 2000
 build_script:
   - ps: Add-AppveyorMessage "Verify Growl works..."
-  - ps: Start-Sleep -Milliseconds 250
   - ps: growlnotify test
 
 ## Test configuration
