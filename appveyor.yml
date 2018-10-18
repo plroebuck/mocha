@@ -40,6 +40,7 @@ install:
 ## Build configuration
 platform:
   - x64
+build: script
 before_build:
   ## Growl requires some time before it's ready to handle notifications
   - ps: Start-Process -NoNewWindow Growl
