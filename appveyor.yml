@@ -62,3 +62,10 @@ test_script:
   #- npm start test.node
   - ps: Add-AppveyorMessage "Done"
 
+## Notifications
+notifications:
+  - provider: Email
+    on_build_success: false
+    on_build_failure: false
+    on_build_status_changed: false
+
