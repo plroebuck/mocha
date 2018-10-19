@@ -47,15 +47,16 @@ before_build:
   - ps: Add-AppveyorMessage "Started Growl service..."
   - ps: Start-Sleep -Milliseconds 2000
 build_script:
+  ## Placeholder command
   - ps: Start-Sleep -Milliseconds 0
-  #- ps: Add-AppveyorMessage "Verify Growl works..."
-  #- ps: growlnotify test
+  - ps: Add-AppveyorMessage "Verify Growl responding..."
+  - ps: growlnotify test
 
 ## Test configuration
 before_test:
   - set CI=true
 test_script:
-  - ps: Add-AppveyorMessage "Checking versions..."
+  - ps: Add-AppveyorMessage "Displaying version information"
   - node --version
   - npm --version
   - ps: Add-AppveyorMessage "Running tests..."
